@@ -12,5 +12,10 @@
     "background": {
       "scripts": ["background.js"]
     }
-  }
+  },
+  "permissions": [
+    "system.cpu",
+    "system.memory",
+    "system.network"
+  ]
 }

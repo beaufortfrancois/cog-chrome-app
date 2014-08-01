@@ -1,6 +1,93 @@
-body {
-  background-color: #F8F8F8;
-  font-family: 'Open Sans', sans-serif;
-  font-size: 14px;
-  margin: 15px;
+@font-face {
+  font-family: 'Roboto Condensed';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Roboto Condensed Regular'), local('RobotoCondensed-Regular'), url(assets/RobotoCondensed.woff) format('woff');
 }
+
+body {
+  background: url(assets/background.jpg) #fff;
+  margin: 0px auto;
+  font-size: 20px;
+  font-family: 'Roboto Condensed';
+}
+
+.nav {
+  background: rgba(0, 0, 0, .4);
+  color: rgb(143, 230, 143);
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.nav-item {
+  display: inline;
+  line-height: 50px;
+  margin: 0 8px;
+}
+
+.nav-item.selected {
+  border-bottom: 2px solid rgba(255, 255, 255, .5);
+}
+
+.wrapper {
+  width: 800px;
+  margin: 0 auto;
+}
+
+.section {
+  clear: left;
+  border-bottom: 0px solid rgba(0,0,0,.1);
+}
+
+.box {
+  padding: 10px 0 10px 0;
+  width: 50%;
+  float: left;
+}
+
+.label {
+  margin-top: 8px;
+  font-size: 80%;
+  color: rgb(192, 233, 195);
+}
+
+.info {
+  color: white;
+  text-shadow: 0 1px 1px #000;
+  margin-bottom: 16px;
+}
+
+.bar {
+  height: 8px;
+  margin-top: 4px;
+}
+
+.bar-section {
+  height: 100%;
+  float: left;
+}
+
+#cpu-usage .idle {
+  background: rgba(0,0,0,.1);
+  height: 2px;
+  margin-top:2px;
+}
+
+#cpu-usage .kernel {
+  background: rgba(143, 230, 143, .5);
+}
+
+#cpu-usage .user {
+  background: rgba(143, 230, 143, .8);
+}
+
+#memory-usage .free {
+  background: rgba(0,0,0,.1);
+  height: 2px;
+  margin-top:2px;
+}
+
+#memory-usage .used {
+  background: rgba(143, 230, 143, .8);
+}
+

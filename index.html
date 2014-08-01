@@ -2,14 +2,56 @@
 
 <html>
 <head>
-  <title>cog-chrome-app</title>
+  <title>Cog</title>
 
   <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-  <h1 id="greeting"></h1>
-
+  <div class="nav">
+    <div class="nav-item">CPU</div>
+    <div class="nav-item">Memory</div>
+    <div class="nav-item">Network</div>
+    <div class="nav-item">Display</div>
+  </div>
+  <div class="wrapper">
+    <div id="cpu" class="section">
+      <div class="box">
+        <div class="label">CPU Name</div>
+        <div id="cpu-name" class="info"></div>
+        
+        <div class="label">Architecture</div>
+        <div id="cpu-arch" class="info"></div>
+        
+        <div class="label">Features</div>
+        <div id="cpu-features" class="info"></div>
+      </div>
+      <div class="box">
+        <div class="label">CPU Usage</div>
+        <div id="cpu-usage" class="info"></div>
+      </div>
+    </div>
+    <div id="memory" class="section">
+      <div class="box">
+        <div class="label">Memory Capacity</div>
+        <div id="memory-capacity" class="info"></div>
+      </div>
+      <div class="box">
+        <div class="label">Memory Usage</div>
+        <div id="memory-usage" class="info"></div>
+      </div>
+    </div>
+    <div id="network" class="section">
+      <div class="box">
+        <div class="label">Ethernet</div>
+        <div id="eth-adapters" class="info"></div>
+      </div>
+      <div class="box">
+        <div class="label">Wi-Fi</div>
+        <div id="wlan-adapters" class="info"></div>
+        </div>
+    </div>
+  </div>
   <script src="main.js"></script>
 </body>
 </html>
