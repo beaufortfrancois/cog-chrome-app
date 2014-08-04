@@ -1,3 +1,22 @@
+function updateAppVersion() {
+  var topBar = document.querySelector('.topbar');
+  topBar.innerHTML += ' ' + chrome.runtime.getManifest().version;
+}
+
+updateAppVersion();
+
+function updatePlugins() {
+  var pluginList = document.querySelector('#plugin-list');
+  var plugins = navigator.plugins;
+
+  pluginList.innerHTML = (plugins.length) ? '' : '-';
+  for (var i = 0; i < plugins.length; i++) {
+    pluginList.innerHTML += '<div>' + plugins[i].name + '</div>';
+  }
+}
+
+updatePlugins();
+
 chrome.system.cpu.getInfo(function(cpuInfo){
   document.querySelector('#cpu-name').textContent = cpuInfo.modelName.replace(/\(R\)/g, '®').replace(/\(TM\)/, '™');
   document.querySelector('#cpu-arch').textContent = cpuInfo.archName.replace(/_/g, '-');
@@ -61,8 +80,8 @@ function updateMemoryUsage() {
   chrome.system.memory.getInfo(function(memoryInfo) {
   
     var memoryUsage = document.querySelector('#memory-usage'); 
-    var usedMemory = Math.round(memoryInfo.availableCapacity / memoryInfo.capacity * 100);
-    var freeMemory = 100 - usedMemory;
+    var freeMemory = Math.round(memoryInfo.availableCapacity / memoryInfo.capacity * 100);
+    var usedMemory = 100 - freeMemory;
     memoryUsage.querySelector('.free').style.width = freeMemory + '%';
     memoryUsage.querySelector('.used').style.width = usedMemory + '%';
     
@@ -71,27 +90,51 @@ function updateMemoryUsage() {
   });
 };
 
-function updateNetworkInterfaces() {
+function updateNetwork() {
   chrome.system.network.getNetworkInterfaces(function(networkInterfaces) {
     
-    var ethAdapters = document.querySelector('#eth-adapters');
-    var wlanAdapters = document.querySelector('#wlan-adapters');
-    ethAdapters.innerHTML = '';
-    wlanAdapters.innerHTML = '';
+    var internetState = document.querySelector('#internet-state');
+    var localAdapters = document.querySelector('#local-adapters');
+    internetState.innerHTML = (navigator.onLine) ? 'Online' : 'Offline';
+    localAdapters.innerHTML = '';
     for (var i = 0; i < networkInterfaces.length; i++) {
-      var interfaceAddress = networkInterfaces[i].address.toUpperCase();
-      if (networkInterfaces[i].name.substring(0, 4) === 'wlan') {
-        wlanAdapters.innerHTML += interfaceAddress + '<br/>';
-      } else {
-        ethAdapters.innerHTML += interfaceAddress + '<br/>';
-      }
+      var interfaceAddress = '<div>' + networkInterfaces[i].address.toUpperCase() + 
+                             '  -  ' + networkInterfaces[i].name + '</div>';
+      localAdapters.innerHTML += interfaceAddress;
     }
-    if (ethAdapters.textContent === '') { ethAdapters.textContent = '-' };
-    if (wlanAdapters.textContent === '') { wlanAdapters.textContent = '-' };
+    if (localAdapters.textContent === '') { localAdapters.textContent = '-' };
     
-    setTimeout(updateNetworkInterfaces, 500);
+    setTimeout(updateNetwork, 500);
     // TODO: Pause when the App goes into pause.
   });
 }
 
-updateNetworkInterfaces();
+updateNetwork();
+
+function updateDisplays() {
+  chrome.system.display.getInfo(function(displayInfo) {
+    
+    var primaryDisplay = document.querySelector('#primary-display');
+    var otherDisplays = document.querySelector('#other-displays');
+    primaryDisplay.innerHTML = '';
+    otherDisplays.innerHTML = '';
+    for (var i = 0; i < displayInfo.length; i++) {
+      var display = '<div>' + displayInfo[i].name + ' - ' + 
+                    displayInfo[i].bounds.width + 'x' + 
+                    displayInfo[i].bounds.height + ' @ ' + 
+                    displayInfo[i].dpiX + 'dpi</div>';
+      if (displayInfo[i].isPrimary) {
+        primaryDisplay.innerHTML += display;
+      } else {
+        otherDisplays.innerHTML += display;
+      }
+    }
+    if (primaryDisplay.textContent === '') { primaryDisplay.textContent = '-' };
+    if (otherDisplays.textContent === '') { otherDisplays.textContent = '-' };
+    
+    setTimeout(updateDisplays, 500);
+    // TODO: Pause when the App goes into pause.
+  });
+}
+
+updateDisplays();

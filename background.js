@@ -8,7 +8,7 @@ chrome.app.runtime.onLaunched.addListener(function() {
   chrome.app.window.create(
     "index.html",
     {
-      id: "mainWindow3",
+      id: "mainWindow4",
       bounds: {
         width: 960,
         height: 540

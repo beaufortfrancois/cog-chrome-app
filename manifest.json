@@ -15,6 +15,7 @@
   },
   "permissions": [
     "system.cpu",
+    "system.display",
     "system.memory",
     "system.network"
   ]

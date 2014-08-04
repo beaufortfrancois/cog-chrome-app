@@ -3,17 +3,12 @@
 <html>
 <head>
   <title>Cog</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-  <div class="nav">
-    <div class="nav-item">CPU</div>
-    <div class="nav-item">Memory</div>
-    <div class="nav-item">Network</div>
-    <div class="nav-item">Display</div>
-  </div>
+  <div class="topbar">Cog</div>
   <div class="wrapper">
     <div id="cpu" class="section">
       <div class="box">
@@ -24,7 +19,7 @@
         <div id="cpu-arch" class="info"></div>
         
         <div class="label">Features</div>
-        <div id="cpu-features" class="info"></div>
+        <div id="cpu-features" class="small info"></div>
       </div>
       <div class="box">
         <div class="label">CPU Usage</div>
@@ -33,7 +28,7 @@
     </div>
     <div id="memory" class="section">
       <div class="box">
-        <div class="label">Memory Capacity</div>
+        <div class="label">Memory</div>
         <div id="memory-capacity" class="info"></div>
       </div>
       <div class="box">
@@ -43,13 +38,29 @@
     </div>
     <div id="network" class="section">
       <div class="box">
-        <div class="label">Ethernet</div>
-        <div id="eth-adapters" class="info"></div>
+        <div class="label">Internet</div>
+        <div id="internet-state" class="info"></div>
       </div>
       <div class="box">
-        <div class="label">Wi-Fi</div>
-        <div id="wlan-adapters" class="info"></div>
-        </div>
+        <div class="label">Network Info</div>
+        <div id="local-adapters" class="small info"></div>
+      </div>
+    </div>
+    <div id="displays" class="section">
+      <div class="box">
+        <div class="label">Primary Display</div>
+        <div id="primary-display" class="info"></div>
+      </div>
+      <div class="box">
+        <div class="label">Other Displays</div>
+        <div id="other-displays" class="small info"></div>
+      </div>
+    </div>
+    <div id="plugins" class="section">
+      <div class="box">
+        <div class="label">Plugins</div>
+        <div id="plugin-list" class="small info"></div>
+      </div>
     </div>
   </div>
   <script src="main.js"></script>
