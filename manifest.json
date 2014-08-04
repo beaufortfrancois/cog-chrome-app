@@ -6,6 +6,10 @@
   "minimum_chrome_version": "23",
   "icons": {
     "16": "assets/icon_16.png",
+    "36": "assets/icon_36.png",
+    "48": "assets/icon_48.png",
+    "78": "assets/icon_78.png",
+    "96": "assets/icon_96.png",
     "128": "assets/icon_128.png"
   },
   "app": {
