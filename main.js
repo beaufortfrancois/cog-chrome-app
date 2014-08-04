@@ -98,9 +98,9 @@ function updateNetwork() {
     internetState.innerHTML = (navigator.onLine) ? 'Online' : 'Offline';
     localAdapters.innerHTML = '';
     for (var i = 0; i < networkInterfaces.length; i++) {
-      var interfaceAddress = '<div>' + networkInterfaces[i].address.toUpperCase() + 
-                             '  -  ' + networkInterfaces[i].name + '</div>';
-      localAdapters.innerHTML += interfaceAddress;
+      var interfaceAddress = networkInterfaces[i].address.toUpperCase().replace(/(:|\.)/g, '<span class="dim">$1</span>');
+      var localAdapter = '<div>' + interfaceAddress + '  -  ' + networkInterfaces[i].name + '</div>';
+      localAdapters.innerHTML += localAdapter;
     }
     if (localAdapters.textContent === '') { localAdapters.textContent = '-' };
     
