@@ -119,10 +119,10 @@ function updateDisplays() {
     primaryDisplay.innerHTML = '';
     otherDisplays.innerHTML = '';
     for (var i = 0; i < displayInfo.length; i++) {
-      var display = '<div>' + displayInfo[i].name + ' - ' + 
-                    displayInfo[i].bounds.width + 'x' + 
-                    displayInfo[i].bounds.height + ' @ ' + 
-                    displayInfo[i].dpiX + 'dpi</div>';
+      var name = (displayInfo[i].name) ? displayInfo[i].name + ' - ' : '';
+      var dpi = (displayInfo[i].dpiX) ? ' @ ' + displayInfo[i].dpiX + 'dpi' : '';
+      var display = '<div>' + name + displayInfo[i].bounds.width + 'x' +
+                    displayInfo[i].bounds.height + dpi + '</div>';
       if (displayInfo[i].isPrimary) {
         primaryDisplay.innerHTML += display;
       } else {
