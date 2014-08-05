@@ -1,11 +1,6 @@
-function updateAppVersion() {
-  var topBar = document.querySelector('.topbar');
-  topBar.innerHTML += ' ' + chrome.runtime.getManifest().version;
-}
+var timeoutId;
 
-updateAppVersion();
-
-function updatePlugins() {
+function initPlugins() {
   var pluginList = document.querySelector('#plugin-list');
   var plugins = navigator.plugins;
 
@@ -15,34 +10,32 @@ function updatePlugins() {
   }
 }
 
-updatePlugins();
+function initCpu() {
+  chrome.system.cpu.getInfo(function(cpuInfo){
+    document.querySelector('#cpu-name').textContent = cpuInfo.modelName.replace(/\(R\)/g, '®').replace(/\(TM\)/, '™');
+    document.querySelector('#cpu-arch').textContent = cpuInfo.archName.replace(/_/g, '-');
+    document.querySelector('#cpu-features').textContent = cpuInfo.features.join(', ').toUpperCase().replace(/_/g, '.') || '-';
 
-chrome.system.cpu.getInfo(function(cpuInfo){
-  document.querySelector('#cpu-name').textContent = cpuInfo.modelName.replace(/\(R\)/g, '®').replace(/\(TM\)/, '™');
-  document.querySelector('#cpu-arch').textContent = cpuInfo.archName.replace(/_/g, '-');
-  document.querySelector('#cpu-features').textContent = cpuInfo.features.join(', ').toUpperCase().replace(/_/g, '.') || '-';
-  
-  var cpuUsage = document.querySelector('#cpu-usage');
-  for (var i = 0; i < cpuInfo.numOfProcessors; i++) {
-    var bar = document.createElement('div');
-    bar.classList.add('bar');
-    var userSection = document.createElement('span');
-    userSection.classList.add('bar-section', 'user');
-    var kernelSection = document.createElement('span');
-    kernelSection.classList.add('bar-section', 'kernel');
-    var idleSection = document.createElement('span');
-    idleSection.classList.add('bar-section', 'idle');
-    bar.appendChild(userSection);
-    bar.appendChild(kernelSection);  
-    bar.appendChild(idleSection);
-    cpuUsage.appendChild(bar);
-  }
-  updateCpuUsage();
-});
+    var cpuUsage = document.querySelector('#cpu-usage');
+    for (var i = 0; i < cpuInfo.numOfProcessors; i++) {
+      var bar = document.createElement('div');
+      bar.classList.add('bar');
+      var userSection = document.createElement('span');
+      userSection.classList.add('bar-section', 'user');
+      var kernelSection = document.createElement('span');
+      kernelSection.classList.add('bar-section', 'kernel');
+      var idleSection = document.createElement('span');
+      idleSection.classList.add('bar-section', 'idle');
+      bar.appendChild(userSection);
+      bar.appendChild(kernelSection);
+      bar.appendChild(idleSection);
+      cpuUsage.appendChild(bar);
+    }
+  });
+}
 
 function updateCpuUsage() {
   chrome.system.cpu.getInfo(function(cpuInfo) {
-      
     var cpuUsage = document.querySelector('#cpu-usage');
     for (var i = 0; i < cpuInfo.numOfProcessors; i++) {
       var bar = cpuUsage.querySelector('.bar:nth-child('+(i+1)+')');
@@ -54,33 +47,31 @@ function updateCpuUsage() {
       bar.querySelector('.kernel').style.width = kernelSectionWidth + '%';
       bar.querySelector('.idle').style.width = idleSectionWidth + '%';
     }
-    setTimeout(updateCpuUsage, 1000);
-    // TODO: Pause when the App goes into pause.
   });
 }
 
-chrome.system.memory.getInfo(function(memoryInfo) {
-  function formatBytes(bytes) {
-    if (bytes < 1024) return bytes + ' Bytes';
-    else if (bytes < 1048576) return(bytes / 1024).toFixed(3) + ' KB';
-    else if (bytes < 1073741824) return(bytes / 1048576).toFixed(3) + ' MB';
-    else return (bytes / 1073741824).toFixed(3) + ' GB';
-  };
-  document.querySelector('#memory-capacity').textContent = formatBytes(memoryInfo.capacity);
-  
-  var memoryUsage = document.querySelector('#memory-usage');
-  var bar = document.createElement('div');
-  bar.classList.add('bar');
-  var usedSection = document.createElement('span');
-  usedSection.classList.add('bar-section', 'used');
-  var freeSection = document.createElement('span');
-  freeSection.classList.add('bar-section', 'free');
-  bar.appendChild(usedSection);
-  bar.appendChild(freeSection);
-  memoryUsage.appendChild(bar);
-  
-  updateMemoryUsage();
-});
+function initMemory() {
+  chrome.system.memory.getInfo(function(memoryInfo) {
+    function formatBytes(bytes) {
+      if (bytes < 1024) return bytes + ' Bytes';
+      else if (bytes < 1048576) return(bytes / 1024).toFixed(3) + ' KB';
+      else if (bytes < 1073741824) return(bytes / 1048576).toFixed(3) + ' MB';
+      else return (bytes / 1073741824).toFixed(3) + ' GB';
+    };
+    document.querySelector('#memory-capacity').textContent = formatBytes(memoryInfo.capacity);
+
+    var memoryUsage = document.querySelector('#memory-usage');
+    var bar = document.createElement('div');
+    bar.classList.add('bar');
+    var usedSection = document.createElement('span');
+    usedSection.classList.add('bar-section', 'used');
+    var freeSection = document.createElement('span');
+    freeSection.classList.add('bar-section', 'free');
+    bar.appendChild(usedSection);
+    bar.appendChild(freeSection);
+    memoryUsage.appendChild(bar);
+  });
+}
 
 function updateMemoryUsage() {
   chrome.system.memory.getInfo(function(memoryInfo) {
@@ -90,9 +81,6 @@ function updateMemoryUsage() {
     var usedMemory = 100 - freeMemory;
     memoryUsage.querySelector('.free').style.width = freeMemory + '%';
     memoryUsage.querySelector('.used').style.width = usedMemory + '%';
-    
-    setTimeout(updateMemoryUsage, 500);
-    // TODO: Pause when the App goes into pause.
   });
 };
 
@@ -116,13 +104,8 @@ function updateNetwork() {
           networkInterfaces[i].address.toUpperCase().replace(/(:|\.)/g, '<span class="dim">$1</span>') + '</div>';
     }
     if (localAdapters.textContent === '') { localAdapters.textContent = '-' };
-    
-    setTimeout(updateNetwork, 500);
-    // TODO: Pause when the App goes into pause.
   });
 }
-
-updateNetwork();
 
 function updateDisplays() {
   chrome.system.display.getInfo(function(displayInfo) {
@@ -144,10 +127,32 @@ function updateDisplays() {
     }
     if (primaryDisplay.textContent === '') { primaryDisplay.textContent = '-' };
     if (otherDisplays.textContent === '') { otherDisplays.textContent = '-' };
-    
-    setTimeout(updateDisplays, 500);
-    // TODO: Pause when the App goes into pause.
   });
 }
 
-updateDisplays();
+function updateAll() {
+  updateCpuUsage();
+  updateDisplays();
+  updateMemoryUsage();
+  updateNetwork();
+
+  timeoutId = setTimeout(updateAll, 500);
+}
+
+chrome.runtime.onSuspend.addListener(function() {
+  clearTimeout(timeoutId);
+});
+
+chrome.runtime.onSuspendCanceled.addListener(function() {
+  updateAll();
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  var topBar = document.querySelector('.topbar');
+  topBar.innerHTML += ' ' + chrome.runtime.getManifest().version;
+
+  initCpu();
+  initMemory();
+  initPlugins();
+  updateAll();
+});
