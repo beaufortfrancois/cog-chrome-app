@@ -1,5 +1,18 @@
 var timeoutId;
 
+function initInfo() {
+  var platformName = document.querySelector('#platform-name');
+  platformName.textContent = navigator.platform;
+
+  var language = document.querySelector('#language');
+  language.textContent = navigator.language;
+
+  var acceptLanguages = document.querySelector('#accept-languages');
+  chrome.i18n.getAcceptLanguages(function(languages) {
+    acceptLanguages.textContent = languages.join(', ');
+  });
+}
+
 function initPlugins() {
   var pluginList = document.querySelector('#plugin-list');
   var plugins = navigator.plugins;
@@ -88,7 +101,10 @@ function updateNetwork() {
   chrome.system.network.getNetworkInterfaces(function(networkInterfaces) {
     
     var internetState = document.querySelector('#internet-state');
-    internetState.innerHTML = (navigator.onLine) ? 'Online' : 'Offline';
+    internetState.textContent = (navigator.onLine) ? 'Online' : 'Offline';
+    if (navigator.connection && navigator.connection.type !== 'none') {
+      internetState.textContent += ' - ' + navigator.connection.type;
+    }
 
     var localAdapters = document.querySelector('#local-adapters');
     localAdapters.innerHTML = '';
@@ -151,6 +167,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var topBar = document.querySelector('.topbar');
   topBar.innerHTML += ' ' + chrome.runtime.getManifest().version;
 
+  initInfo();
   initCpu();
   initMemory();
   initPlugins();
