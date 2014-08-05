@@ -60,7 +60,13 @@ function updateCpuUsage() {
 }
 
 chrome.system.memory.getInfo(function(memoryInfo) {
-  document.querySelector('#memory-capacity').textContent = Math.round(memoryInfo.capacity / 1024 / 1024 / 1024) + 'GB';
+  function formatBytes(bytes) {
+    if (bytes < 1024) return bytes + ' Bytes';
+    else if (bytes < 1048576) return(bytes / 1024).toFixed(3) + ' KB';
+    else if (bytes < 1073741824) return(bytes / 1048576).toFixed(3) + ' MB';
+    else return (bytes / 1073741824).toFixed(3) + ' GB';
+  };
+  document.querySelector('#memory-capacity').textContent = formatBytes(memoryInfo.capacity);
   
   var memoryUsage = document.querySelector('#memory-usage');
   var bar = document.createElement('div');
