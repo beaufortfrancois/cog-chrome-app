@@ -100,13 +100,20 @@ function updateNetwork() {
   chrome.system.network.getNetworkInterfaces(function(networkInterfaces) {
     
     var internetState = document.querySelector('#internet-state');
-    var localAdapters = document.querySelector('#local-adapters');
     internetState.innerHTML = (navigator.onLine) ? 'Online' : 'Offline';
+
+    var localAdapters = document.querySelector('#local-adapters');
     localAdapters.innerHTML = '';
+    networkInterfaces.sort(function(a, b) {
+      if (a.name < b.name) return -1;
+      if (a.name > b.name) return 1;
+      if (a.address.length < b.address.length) return -1;
+      if (a.address.length > b.address.length) return 1;
+      return 0;
+    });
     for (var i = 0; i < networkInterfaces.length; i++) {
-      var interfaceAddress = networkInterfaces[i].address.toUpperCase().replace(/(:|\.)/g, '<span class="dim">$1</span>');
-      var localAdapter = '<div>' + interfaceAddress + '  -  ' + networkInterfaces[i].name + '</div>';
-      localAdapters.innerHTML += localAdapter;
+      localAdapters.innerHTML += '<div>' + networkInterfaces[i].name + ' - ' +
+          networkInterfaces[i].address.toUpperCase().replace(/(:|\.)/g, '<span class="dim">$1</span>') + '</div>';
     }
     if (localAdapters.textContent === '') { localAdapters.textContent = '-' };
     

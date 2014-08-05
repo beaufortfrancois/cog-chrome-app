@@ -94,7 +94,7 @@ body {
 
 .dim {
   opacity: .4;
-  width: 8px;
+  width: 6px;
   text-align: center;
   display: inline-block;
 }
@@ -121,4 +121,8 @@ body {
 
 .small {
   font-size: 80%;
+}
+
+#local-adapters {
+  white-space: nowrap;
 }
