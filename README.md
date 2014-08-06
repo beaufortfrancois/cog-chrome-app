@@ -19,16 +19,7 @@ You can download the whole source code [as one archive](https://github.com/beauf
 ### Chrome for Android
 
 * Install the Chrome Apps for mobile toolchain [requirements](https://github.com/MobileChromeApps/mobile-chrome-apps/blob/master/docs/Installation.md).
-* Create your project:
-
-```
-cca create cog-mobile-chrome-app --link-to=path/to/cog-chrome-app/manifest.json
-```
-
+* Create your project: `cca create cog-mobile-chrome-app --link-to=path/to/cog-chrome-app/manifest.json`
 * Plug in your Android device. 
 * Go to Settings->Developer Options and enable `USB debugging`.
-* Run it:
-
-```
-cca run android
-```
+* Run it: `cca run android`
