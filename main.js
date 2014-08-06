@@ -8,6 +8,8 @@ function initInfo() {
     operatingSystem.textContent = 'Mac OS';
   } else if (/Win/.test(navigator.platform)) {
     operatingSystem.textContent = 'Windows';
+  } else if (/Android/.test(navigator.userAgent)) {
+    operatingSystem.textContent = 'Android';
   } else if (/Linux/.test(navigator.userAgent)) {
     operatingSystem.textContent = 'Linux';
   } else {
