@@ -1,8 +1,24 @@
 var timeoutId;
 
 function initInfo() {
+  var operatingSystem = document.querySelector('#operating-system');
+  if (/CrOS/.test(navigator.userAgent)) {
+    operatingSystem.textContent = 'Chrome OS';
+  } else if (/Mac/.test(navigator.platform)) {
+    operatingSystem.textContent = 'Mac OS';
+  } else if (/Win/.test(navigator.platform)) {
+    operatingSystem.textContent = 'Windows';
+  } else if (/Linux/.test(navigator.userAgent)) {
+    operatingSystem.textContent = 'Linux';
+  } else {
+    operatingSystem.textContent = '-';
+  }
+
+  var chromeVersion = document.querySelector('#chrome-version');
+  chromeVersion.textContent = navigator.userAgent.match('Chrome/([0-9]*\.[0-9]*\.[0-9]*\.[0-9]*)')[1];
+
   var platformName = document.querySelector('#platform-name');
-  platformName.textContent = navigator.platform;
+  platformName.textContent = navigator.platform.replace(/_/g, '-');
 
   var language = document.querySelector('#language');
   language.textContent = navigator.language;
@@ -25,9 +41,15 @@ function initPlugins() {
 
 function initCpu() {
   chrome.system.cpu.getInfo(function(cpuInfo){
-    document.querySelector('#cpu-name').textContent = cpuInfo.modelName.replace(/\(R\)/g, '®').replace(/\(TM\)/, '™');
-    document.querySelector('#cpu-arch').textContent = cpuInfo.archName.replace(/_/g, '-');
-    document.querySelector('#cpu-features').textContent = cpuInfo.features.join(', ').toUpperCase().replace(/_/g, '.') || '-';
+
+    var cpuName = cpuInfo.modelName.replace(/\(R\)/g, '®').replace(/\(TM\)/, '™');
+    document.querySelector('#cpu-name').textContent = cpuName;
+
+    var cpuArch = cpuInfo.archName.replace(/_/g, '-');
+    document.querySelector('#cpu-arch').textContent = cpuArch;
+
+    var cpuFeatures = cpuInfo.features.join(', ').toUpperCase().replace(/_/g, '.') || '-';
+    document.querySelector('#cpu-features').textContent = cpuFeatures;
 
     var cpuUsage = document.querySelector('#cpu-usage');
     for (var i = 0; i < cpuInfo.numOfProcessors; i++) {
@@ -49,6 +71,7 @@ function initCpu() {
 
 function updateCpuUsage() {
   chrome.system.cpu.getInfo(function(cpuInfo) {
+
     var cpuUsage = document.querySelector('#cpu-usage');
     for (var i = 0; i < cpuInfo.numOfProcessors; i++) {
       var bar = cpuUsage.querySelector('.bar:nth-child('+(i+1)+')');
@@ -65,6 +88,7 @@ function updateCpuUsage() {
 
 function initMemory() {
   chrome.system.memory.getInfo(function(memoryInfo) {
+
     function formatBytes(bytes) {
       if (bytes < 1024) return bytes + ' Bytes';
       else if (bytes < 1048576) return(bytes / 1024).toFixed(3) + ' KB';
