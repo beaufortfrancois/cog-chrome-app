@@ -100,6 +100,7 @@ body {
 }
 
 #cpu-usage .idle,
+#battery-level .free,
 #memory-usage .free {
   background: rgba(0,0,0,.4);
 }
@@ -114,6 +115,7 @@ body {
   box-shadow: inset 0 -1px 1px rgba(255, 255, 255, .5);
 }
 
+#battery-level .used,
 #memory-usage .used {
   background: rgba(143, 230, 143, .8);
   box-shadow: inset 0 -1px 1px rgba(255, 255, 255, .5);

@@ -31,6 +31,53 @@ function initInfo() {
   });
 }
 
+function initBattery() {
+  if (navigator.getBattery) {
+    document.querySelector('#battery').style.display = 'block';
+  }
+
+  navigator.getBattery().then(function(batteryManager) {
+    updateBattery(batteryManager);
+    function update(event) {
+      updateBattery(event.target);
+    }
+
+    batteryManager.onchargingchange = update;
+    batteryManager.ondischargingtimechange = update;
+    batteryManager.onchargingtimechange = update;
+    batteryManager.onlevelchange = update;
+  });
+}
+
+function updateBattery(batteryManager) {
+    var batteryStatus = document.querySelector('#battery-status');
+    batteryStatus.textContent = batteryManager.charging ? 'Charging' : 'Discharging';
+
+    function formatSeconds(seconds) {
+      if (seconds < 60) return seconds + ' s';
+      else if (seconds < 3600) return '00:' + (seconds / 60).toFixed(0);
+      else {
+        var hours = (seconds / 3600).toFixed(0);
+        var minutes = ((seconds - (hours * 3600)) / 60).toFixed(0);
+        return hours + ':' + ((minutes > 9) ? minutes : '0' + minutes);
+      }
+    };
+
+    var batteryTime = document.querySelector('#battery-time');
+    if (batteryManager.charging) {
+      batteryTime.textContent = (batteryManager.chargingTime !== Infinity) ?
+          formatSeconds(batteryManager.chargingTime) + ' until full' : '-';
+    } else {
+      batteryTime.textContent = (batteryManager.dischargingTime !== Infinity) ?
+          formatSeconds(batteryManager.dischargingTime) + ' left' : '-';
+    }
+
+    var batteryLevel = document.querySelector('#battery-level');
+    var batteryUsed = batteryManager.level.toFixed(2) * 100;
+    batteryLevel.querySelector('.used').style.width = batteryUsed + '%';
+    batteryLevel.querySelector('.free').style.width = 100 -batteryUsed + '%';
+}
+
 function initPlugins() {
   var pluginList = document.querySelector('#plugin-list');
   var plugins = navigator.plugins;
@@ -114,8 +161,8 @@ function initMemory() {
 
 function updateMemoryUsage() {
   chrome.system.memory.getInfo(function(memoryInfo) {
-  
-    var memoryUsage = document.querySelector('#memory-usage'); 
+
+    var memoryUsage = document.querySelector('#memory-usage');
     var freeMemory = Math.round(memoryInfo.availableCapacity / memoryInfo.capacity * 100);
     var usedMemory = 100 - freeMemory;
     memoryUsage.querySelector('.free').style.width = freeMemory + '%';
@@ -125,7 +172,7 @@ function updateMemoryUsage() {
 
 function updateNetwork() {
   chrome.system.network.getNetworkInterfaces(function(networkInterfaces) {
-    
+
     var internetState = document.querySelector('#internet-state');
     internetState.textContent = (navigator.onLine) ? 'Online' : 'Offline';
     if (navigator.connection && navigator.connection.type !== 'none') {
@@ -151,7 +198,7 @@ function updateNetwork() {
 
 function updateDisplays() {
   chrome.system.display.getInfo(function(displayInfo) {
-    
+
     var primaryDisplay = document.querySelector('#primary-display');
     var otherDisplays = document.querySelector('#other-displays');
     primaryDisplay.innerHTML = '';
@@ -194,6 +241,7 @@ document.addEventListener('DOMContentLoaded', function() {
   topBar.innerHTML += ' ' + chrome.runtime.getManifest().version;
 
   initInfo();
+  initBattery();
   initCpu();
   initMemory();
   initPlugins();
