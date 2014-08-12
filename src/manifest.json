@@ -3,7 +3,7 @@
   "name": "Cog - System Info Viewer",
   "short_name": "Cog",
   "description": "Display lots of useful hardware and network info",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "minimum_chrome_version": "23",
   "icons": {
     "16": "assets/icon_16.png",
