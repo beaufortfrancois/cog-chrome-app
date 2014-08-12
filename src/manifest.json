@@ -1,9 +1,9 @@
 {
   "manifest_version": 2,
-  "name": "Cog - System Information Viewer",
+  "name": "Cog - System Info Viewer",
   "short_name": "Cog",
   "description": "Display lots of useful hardware and network info",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "minimum_chrome_version": "23",
   "icons": {
     "16": "assets/icon_16.png",
