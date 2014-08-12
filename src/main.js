@@ -1,4 +1,31 @@
 var timeoutId;
+var previousCPUData;
+var useRealTimeData = false;
+var ShowTextData = false;
+
+document.querySelector('#text-data').addEventListener("change", function(event) {
+  ShowTextData = event.target.checked;
+  var elements = document.querySelectorAll('.bar .info');
+  for(var i=0;i<elements.length;i++) {
+    if(ShowTextData) {
+      elements[i].classList.remove('hidden');
+    } else {
+      elements[i].classList.add('hidden');
+    }
+  }
+});
+
+document.querySelector('#real-time-data').addEventListener("change", function(event) {
+  useRealTimeData = event.target.checked;
+  var elements = document.querySelectorAll('.bar-section');
+  for(var i=0;i<elements.length;i++) {
+    if(useRealTimeData) {
+      elements[i].classList.add('real-time');
+    } else {
+      elements[i].classList.remove('real-time');
+    }
+  };
+});
 
 function initInfo() {
   var operatingSystem = document.querySelector('#operating-system');
@@ -108,17 +135,16 @@ function initCpu() {
       var bar = document.createElement('div');
       bar.classList.add('bar');
       var usedText = document.createElement('span');
-      usedText.classList.add('small', 'info', 'inline');
+      usedText.classList.add('small', 'info', 'inline', 'hidden');
       var userSection = document.createElement('span');
-      userSection.classList.add('bar-section', 'user', 'first-bar');
+      userSection.classList.add('bar-section', 'user');
       var kernelSection = document.createElement('span');
       kernelSection.classList.add('bar-section', 'kernel');
       var idleSection = document.createElement('span');
-      idleSection.classList.add('bar-section', 'idle');
-      console.log(cpuInfo);
+      idleSection.classList.add('bar-section', 'idle', 'first-bar');
       bar.appendChild(usedText);
-      bar.appendChild(userSection);
-      bar.appendChild(kernelSection);
+      idleSection.appendChild(userSection);
+      idleSection.appendChild(kernelSection);
       bar.appendChild(idleSection);
       cpuUsage.appendChild(bar);
     }
@@ -132,14 +158,26 @@ function updateCpuUsage() {
     for (var i = 0; i < cpuInfo.numOfProcessors; i++) {
       var bar = cpuUsage.querySelector('.bar:nth-child(' + (i + 1) + ')');
       var usage = cpuInfo.processors[i].usage;
-      var userSectionWidth = Math.floor(usage.user / usage.total * 100);
-      var kernelSectionWidth = Math.floor(usage.kernel / usage.total * 100);
+      if(previousCPUData) {
+        var oldUsage = previousCPUData.processors[i].usage;
+        var userSectionWidth = Math.floor((oldUsage.user - usage.user) / (oldUsage.total - usage.total) * 100);
+        var kernelSectionWidth = Math.floor((oldUsage.kernel - usage.kernel) / (oldUsage.total - usage.total) * 100);
+      } else {
+        var userSectionWidth = Math.floor(usage.user / usage.total * 100);
+        var kernelSectionWidth = Math.floor(usage.kernel / usage.total * 100);
+      }
       var idleSectionWidth = 100 - userSectionWidth - kernelSectionWidth;
+      // if(ShowTextData) {
+      //   bar.querySelector('.info').classList.remove('hidden');
+      // } else {
+      //   bar.querySelector('.info').classList.add('hidden');
+      // }
       bar.querySelector('.info').textContent = "User: " + userSectionWidth + '%' + " - " + "Kernel: " + kernelSectionWidth + '%' + " - " + "Idle: " + idleSectionWidth + '%';
       bar.querySelector('.user').style.width = userSectionWidth + '%';
       bar.querySelector('.kernel').style.width = kernelSectionWidth + '%';
-      bar.querySelector('.idle').style.width = idleSectionWidth + '%';
+      bar.querySelector('.idle').style.width = '100%';
     }
+    previousCPUData = cpuInfo;
   });
 }
 
@@ -160,13 +198,13 @@ function initMemory() {
     var bar = document.createElement('div');
     bar.classList.add('bar');
     var usedText = document.createElement('span');
-    usedText.classList.add('small', 'info', 'inline');
+    usedText.classList.add('small', 'info', 'inline', 'hidden');
     var usedSection = document.createElement('span');
-    usedSection.classList.add('bar-section', 'used', 'first-bar');
+    usedSection.classList.add('bar-section', 'used');
     var freeSection = document.createElement('span');
-    freeSection.classList.add('bar-section', 'free');
+    freeSection.classList.add('bar-section', 'free', 'first-bar');
     bar.appendChild(usedText);
-    bar.appendChild(usedSection);
+    freeSection.appendChild(usedSection);
     bar.appendChild(freeSection);
     memoryUsage.appendChild(bar);
   });
@@ -178,9 +216,14 @@ function updateMemoryUsage() {
     var memoryUsage = document.querySelector('#memory-usage');
     var freeMemory = Math.round(memoryInfo.availableCapacity / memoryInfo.capacity * 100);
     var usedMemory = 100 - freeMemory;
-    memoryUsage.querySelector('.free').style.width = freeMemory + '%';
+    memoryUsage.querySelector('.free').style.width = '100%';
     memoryUsage.querySelector('.used').style.width = usedMemory + '%';
     memoryUsage.querySelector('.info').textContent = formatBytes(memoryInfo.capacity - memoryInfo.availableCapacity) + " / " + formatBytes(memoryInfo.capacity);
+    // if(ShowTextData) {
+    //   memoryUsage.querySelector('.info').classList.remove('hidden');
+    // } else {
+    //   memoryUsage.querySelector('.info').classList.add('hidden');
+    // }
   });
 };
 
@@ -232,18 +275,27 @@ function updateDisplays() {
     if (otherDisplays.textContent === '') { otherDisplays.textContent = '-' };
   });
 }
-
+var runData = true;
 function updateAll() {
   updateCpuUsage();
   updateDisplays();
   updateMemoryUsage();
   updateNetwork();
-
-  timeoutId = setTimeout(updateAll, 500);
+  if(useRealTimeData) {
+    if(runData) {
+      requestAnimationFrame(updateAll);
+    }
+  } else {
+    timeoutId = setTimeout(updateAll, 500);
+  }
 }
 
 chrome.runtime.onSuspend.addListener(function() {
-  clearTimeout(timeoutId);
+  if(useRealTimeData) {
+    runData = false;
+  } else {
+    clearTimeout(timeoutId);
+  }
 });
 
 chrome.runtime.onSuspendCanceled.addListener(function() {
