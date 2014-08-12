@@ -1,4 +1,4 @@
-# Cog - Chrome App
+# <img src="https://raw.githubusercontent.com/beaufortfrancois/cog-chrome-app/master/src/assets/icon_36.png"> Cog - Chrome App
 
 A simple Chrome App to showcase `chrome.system.*` APIs available on the [Chrome Web Store](https://chrome.google.com/webstore/detail/difcjdggkffcfgcfconafogflmmaadco) and [Google Play Store](https://play.google.com/store/apps/details?id=com.github.beaufortfrancois.cog_chrome_app).
 
