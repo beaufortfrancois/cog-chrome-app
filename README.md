@@ -1,6 +1,6 @@
-# <img src="https://raw.githubusercontent.com/beaufortfrancois/cog-chrome-app/master/src/assets/icon_36.png"> Cog - Chrome App
+# Cog - System Info Viewer App
 
-Cog is a simple Chrome App to showcase [`chrome.system.*`](https://developer.chrome.com/extensions/declare_permissions#system.cpu) APIs. It is available now on the [Chrome Web Store](https://chrome.google.com/webstore/detail/difcjdggkffcfgcfconafogflmmaadco) and [Google Play Store](https://play.google.com/store/apps/details?id=com.github.beaufortfrancois.cog_chrome_app).
+Cog - System Info Viewer is a simple [Chrome App](https://developer.chrome.com/apps/about_apps) that showcases [`chrome.system.*`](https://developer.chrome.com/extensions/declare_permissions#system.cpu) APIs. It is available now on the [Chrome Web Store](https://chrome.google.com/webstore/detail/difcjdggkffcfgcfconafogflmmaadco) and [Google Play Store](https://play.google.com/store/apps/details?id=com.github.beaufortfrancois.cog_chrome_app).
 
 <img src="https://raw.githubusercontent.com/beaufortfrancois/cog-chrome-app/master/hero.png">
 ## Getting the code
@@ -11,13 +11,13 @@ You can download the whole source code [as one archive](https://github.com/beauf
 
 ## Running the development version
 
-### <img src="https://ssl.gstatic.com/images/icons/product/chrome-32.png"> Desktop
+### <img width="32px" height="32px" src="https://ssl.gstatic.com/images/icons/product/chrome-64.png"> Desktop
 
 * Check `Developer Mode` in `chrome://extensions`
 * Click "Load unpacked extension..." in `chrome://extensions` and select the `src` folder in the `cog-chrome-app` repository.
 * Run it.
 
-### <img src="https://ssl.gstatic.com/images/icons/product/android-32.png"> Android
+### <img width="32px" height="32px" src="https://ssl.gstatic.com/images/icons/product/android-64.png"> Android
 
 * Install the Chrome Apps on mobile [requirements](https://github.com/MobileChromeApps/mobile-chrome-apps/blob/master/docs/Installation.md).
 * Create your project with `cca create cog-mobile-chrome-app --link-to=path/to/cog-chrome-app/src/manifest.json`
