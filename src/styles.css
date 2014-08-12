@@ -90,6 +90,12 @@ body {
 .bar-section {
   height: 100%;
   float: left;
+  transition:width 1s;
+  transition-timing-function: easeOutElastic;
+}
+
+.first-bar {
+  clear:both;
 }
 
 .dim {
@@ -127,4 +133,9 @@ body {
 
 #local-adapters {
   white-space: nowrap;
+}
+
+.inline {
+  margin:0;
+  float:left;
 }
