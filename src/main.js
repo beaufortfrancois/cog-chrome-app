@@ -151,6 +151,10 @@ function initCpu() {
   });
 }
 
+function zeroPad(number) {
+  return ('000'+number).slice(-3);
+}
+
 function updateCpuUsage() {
   chrome.system.cpu.getInfo(function(cpuInfo) {
 
@@ -172,7 +176,7 @@ function updateCpuUsage() {
       // } else {
       //   bar.querySelector('.info').classList.add('hidden');
       // }
-      bar.querySelector('.info').textContent = "User: " + userSectionWidth + '%' + " - " + "Kernel: " + kernelSectionWidth + '%' + " - " + "Idle: " + idleSectionWidth + '%';
+      bar.querySelector('.info').textContent = "User: " + zeroPad(userSectionWidth) + '%' + " - " + "Kernel: " + zeroPad(kernelSectionWidth) + '%' + " - " + "Idle: " + zeroPad(idleSectionWidth) + '%';
       bar.querySelector('.user').style.width = userSectionWidth + '%';
       bar.querySelector('.kernel').style.width = kernelSectionWidth + '%';
       bar.querySelector('.idle').style.width = '100%';
