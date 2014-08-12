@@ -32,9 +32,10 @@ function initInfo() {
 }
 
 function initBattery() {
-  if (navigator.getBattery) {
-    document.querySelector('#battery').style.display = 'block';
+  if (!navigator.getBattery) {
+    return;
   }
+  document.querySelector('#battery').style.display = 'block';
 
   navigator.getBattery().then(function(batteryManager) {
     updateBattery(batteryManager);
