@@ -85,11 +85,13 @@ body {
 .bar {
   height: 8px;
   margin-top: 4px;
+  background: rgba(0,0,0,.4);
 }
 
 .bar-section {
   height: 100%;
   float: left;
+  transition: width .5s ease-in-out;
 }
 
 .dim {
@@ -97,12 +99,6 @@ body {
   width: 6px;
   text-align: center;
   display: inline-block;
-}
-
-#cpu-usage .idle,
-#battery-level .free,
-#memory-usage .free {
-  background: rgba(0,0,0,.4);
 }
 
 #cpu-usage .kernel {

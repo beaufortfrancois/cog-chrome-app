@@ -1,4 +1,5 @@
 var timeoutId;
+var previousCpuInfo;
 
 function initInfo() {
   var operatingSystem = document.querySelector('#operating-system');
@@ -78,7 +79,6 @@ function updateBattery(batteryManager) {
     var batteryLevel = document.querySelector('#battery-level');
     var batteryUsed = batteryManager.level.toFixed(2) * 100;
     batteryLevel.querySelector('.used').style.width = batteryUsed + '%';
-    batteryLevel.querySelector('.free').style.width = 100 -batteryUsed + '%';
 }
 
 function initPlugins() {
@@ -92,7 +92,7 @@ function initPlugins() {
 }
 
 function initCpu() {
-  chrome.system.cpu.getInfo(function(cpuInfo){
+  chrome.system.cpu.getInfo(function(cpuInfo) {
 
     var cpuName = cpuInfo.modelName.replace(/\(R\)/g, '®').replace(/\(TM\)/, '™');
     document.querySelector('#cpu-name').textContent = cpuName;
@@ -111,11 +111,8 @@ function initCpu() {
       userSection.classList.add('bar-section', 'user');
       var kernelSection = document.createElement('span');
       kernelSection.classList.add('bar-section', 'kernel');
-      var idleSection = document.createElement('span');
-      idleSection.classList.add('bar-section', 'idle');
       bar.appendChild(userSection);
       bar.appendChild(kernelSection);
-      bar.appendChild(idleSection);
       cpuUsage.appendChild(bar);
     }
   });
@@ -126,15 +123,20 @@ function updateCpuUsage() {
 
     var cpuUsage = document.querySelector('#cpu-usage');
     for (var i = 0; i < cpuInfo.numOfProcessors; i++) {
-      var bar = cpuUsage.querySelector('.bar:nth-child('+(i+1)+')');
       var usage = cpuInfo.processors[i].usage;
-      var userSectionWidth = Math.floor(usage.user / usage.total * 100);
-      var kernelSectionWidth = Math.floor(usage.kernel / usage.total * 100);
-      var idleSectionWidth = 100 - userSectionWidth - kernelSectionWidth;
+      if (previousCpuInfo) {
+        var oldUsage = previousCpuInfo.processors[i].usage;
+        var userSectionWidth = Math.floor((oldUsage.user - usage.user) / (oldUsage.total - usage.total) * 100);
+        var kernelSectionWidth = Math.floor((oldUsage.kernel - usage.kernel) / (oldUsage.total - usage.total) * 100);
+      } else {
+        var userSectionWidth = Math.floor(usage.user / usage.total * 100);
+        var kernelSectionWidth = Math.floor(usage.kernel / usage.total * 100);
+      }
+      var bar = cpuUsage.querySelector('.bar:nth-child(' + (i + 1) + ')');
       bar.querySelector('.user').style.width = userSectionWidth + '%';
       bar.querySelector('.kernel').style.width = kernelSectionWidth + '%';
-      bar.querySelector('.idle').style.width = idleSectionWidth + '%';
     }
+    previousCpuInfo = cpuInfo;
   });
 }
 
@@ -143,10 +145,11 @@ function initMemory() {
 
     function formatBytes(bytes) {
       if (bytes < 1024) return bytes + ' Bytes';
-      else if (bytes < 1048576) return(bytes / 1024).toFixed(3) + ' KB';
-      else if (bytes < 1073741824) return(bytes / 1048576).toFixed(3) + ' MB';
+      else if (bytes < 1048576) return (bytes / 1024).toFixed(3) + ' KB';
+      else if (bytes < 1073741824) return (bytes / 1048576).toFixed(3) + ' MB';
       else return (bytes / 1073741824).toFixed(3) + ' GB';
-    };
+    }
+
     document.querySelector('#memory-capacity').textContent = formatBytes(memoryInfo.capacity);
 
     var memoryUsage = document.querySelector('#memory-usage');
@@ -154,10 +157,7 @@ function initMemory() {
     bar.classList.add('bar');
     var usedSection = document.createElement('span');
     usedSection.classList.add('bar-section', 'used');
-    var freeSection = document.createElement('span');
-    freeSection.classList.add('bar-section', 'free');
     bar.appendChild(usedSection);
-    bar.appendChild(freeSection);
     memoryUsage.appendChild(bar);
   });
 }
@@ -166,9 +166,7 @@ function updateMemoryUsage() {
   chrome.system.memory.getInfo(function(memoryInfo) {
 
     var memoryUsage = document.querySelector('#memory-usage');
-    var freeMemory = Math.round(memoryInfo.availableCapacity / memoryInfo.capacity * 100);
-    var usedMemory = 100 - freeMemory;
-    memoryUsage.querySelector('.free').style.width = freeMemory + '%';
+    var usedMemory = 100 - Math.round(memoryInfo.availableCapacity / memoryInfo.capacity * 100);
     memoryUsage.querySelector('.used').style.width = usedMemory + '%';
   });
 };
