@@ -5,6 +5,10 @@
   src: local('Roboto Condensed Regular'), local('RobotoCondensed-Regular'), url(assets/RobotoCondensed.woff) format('woff');
 }
 
+html {
+  overflow-y:scroll;
+}
+
 body {
   background: linear-gradient(180deg, #11575c 0%,#3b8766 100%) no-repeat #3b8766;
   margin: 0px auto;
