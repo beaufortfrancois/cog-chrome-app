@@ -22,6 +22,7 @@
     "system.cpu",
     "system.display",
     "system.memory",
-    "system.network"
+    "system.network",
+    "system.storage"
   ]
 }

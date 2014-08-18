@@ -36,6 +36,16 @@
         <div id="cpu-usage" class="info"></div>
       </div>
     </div>
+    <div id="storage" class="section hidden">
+      <div class="box">
+        <div class="label">Fixed Storage</div>
+        <div id="fixed-storage-units" class="small info"></div>
+      </div>
+      <div class="box">
+        <div class="label">Removable Storage</div>
+        <div id="removable-storage-units" class="small info"></div>
+      </div>
+    </div>
     <div id="memory" class="section">
       <div class="box">
         <div class="label">Memory</div>
@@ -56,7 +66,7 @@
         <div id="local-adapters" class="small info"></div>
       </div>
     </div>
-    <div id="battery" class="section" style="display: none">
+    <div id="battery" class="section hidden">
       <div class="box">
         <div class="label">Battery</div>
         <div id="battery-status" class="info"></div>
@@ -99,6 +109,7 @@
       </div>
     </div>
   </div>
+  <script src="util.js"></script>
   <script src="main.js"></script>
 </body>
 </html>

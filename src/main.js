@@ -36,7 +36,7 @@ function initBattery() {
   if (!navigator.getBattery) {
     return;
   }
-  document.querySelector('#battery').style.display = 'block';
+  document.querySelector('#battery').classList.remove('hidden');
 
   navigator.getBattery().then(function(batteryManager) {
     updateBattery(batteryManager);
@@ -54,18 +54,6 @@ function initBattery() {
 function updateBattery(batteryManager) {
     var batteryStatus = document.querySelector('#battery-status');
     batteryStatus.textContent = batteryManager.charging ? 'Charging' : 'Discharging';
-
-    function formatSeconds(seconds) {
-      if (seconds < 60) return seconds + ' s';
-      else if (seconds < 3600) {
-        var minutes = Math.floor(seconds / 60).toFixed(0);
-        return '00:' + ((minutes > 9) ? minutes : '0' + minutes);
-      } else {
-        var hours = Math.floor(seconds / 3600).toFixed(0);
-        var minutes = Math.floor((seconds - (hours * 3600)) / 60).toFixed(0);
-        return hours + ':' + ((minutes > 9) ? minutes : '0' + minutes);
-      }
-    };
 
     var batteryTime = document.querySelector('#battery-time');
     if (batteryManager.charging) {
@@ -89,6 +77,32 @@ function initPlugins() {
   for (var i = 0; i < plugins.length; i++) {
     pluginList.innerHTML += '<div>' + plugins[i].name + '</div>';
   }
+}
+
+function updateStorage() {
+  chrome.system.storage.getInfo(function(storageInfo) {
+    if (storageInfo.length === 0) {
+      document.querySelector('#storage').classList.add('hidden');
+      return;
+    }
+
+    document.querySelector('#storage').classList.remove('hidden');
+
+    var fixedStorageUnits = document.querySelector('#fixed-storage-units');
+    var removableStorageUnits = document.querySelector('#removable-storage-units');
+    fixedStorageUnits.innerHTML = '';
+    removableStorageUnits.innerHTML = '';
+    for (var i = 0; i < storageInfo.length; i++) {
+      var storageUnitHtml = '<div>' + storageInfo[i].name + ' - ' + formatBytes(storageInfo[i].capacity) + '</div>';
+      if (storageInfo[i].type === 'removable') {
+        removableStorageUnits.innerHTML += storageUnitHtml;
+      } else {
+        fixedStorageUnits.innerHTML += storageUnitHtml;
+      }
+    }
+    if (fixedStorageUnits.textContent === '') { fixedStorageUnits.textContent = '-' };
+    if (removableStorageUnits.textContent === '') { removableStorageUnits.textContent = '-' };
+  });
 }
 
 function initCpu() {
@@ -142,13 +156,6 @@ function updateCpuUsage() {
 
 function initMemory() {
   chrome.system.memory.getInfo(function(memoryInfo) {
-
-    function formatBytes(bytes) {
-      if (bytes < 1024) return bytes + ' Bytes';
-      else if (bytes < 1048576) return (bytes / 1024).toFixed(3) + ' KB';
-      else if (bytes < 1073741824) return (bytes / 1048576).toFixed(3) + ' MB';
-      else return (bytes / 1073741824).toFixed(3) + ' GB';
-    }
 
     document.querySelector('#memory-capacity').textContent = formatBytes(memoryInfo.capacity);
 
@@ -225,6 +232,7 @@ function updateAll() {
   updateDisplays();
   updateMemoryUsage();
   updateNetwork();
+  updateStorage();
 
   timeoutId = setTimeout(updateAll, 500);
 }

@@ -124,3 +124,7 @@ body {
 #local-adapters {
   white-space: nowrap;
 }
+
+.hidden {
+  display: none;
+}
