@@ -96,15 +96,27 @@ function updateStorage() {
     fixedStorageUnits.innerHTML = '';
     removableStorageUnits.innerHTML = '';
     for (var i = 0; i < storageInfo.length; i++) {
-      var storageUnitHtml = '<div>' + storageInfo[i].name + ' - ' + formatBytes(storageInfo[i].capacity) + '</div>';
+      var storageUnitHtml = '<div>' + storageInfo[i].name +
+          (storageInfo[i].capacity ? ' - ' + formatBytes(storageInfo[i].capacity) : '') + '</div>';
       if (storageInfo[i].type === 'removable') {
         removableStorageUnits.innerHTML += storageUnitHtml;
       } else {
         fixedStorageUnits.innerHTML += storageUnitHtml;
       }
     }
-    if (fixedStorageUnits.textContent === '') { fixedStorageUnits.textContent = '-' };
-    if (removableStorageUnits.textContent === '') { removableStorageUnits.textContent = '-' };
+
+    var fixedStorage = document.querySelector('#fixed-storage');
+    if (fixedStorageUnits.textContent === '') {
+      fixedStorage.classList.add('hidden');
+    } else {
+      fixedStorage.classList.remove('hidden');
+    }
+    var removableStorage = document.querySelector('#removable-storage');
+    if (removableStorageUnits.textContent === '') {
+      removableStorage.classList.add('hidden');
+    } else {
+      removableStorage.classList.remove('hidden');
+    }
   });
 }
 
