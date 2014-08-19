@@ -11,7 +11,8 @@
     "48": "assets/icon_48.png",
     "78": "assets/icon_78.png",
     "96": "assets/icon_96.png",
-    "128": "assets/icon_128.png"
+    "128": "assets/icon_128.png",
+    "144": "assets/icon_144.png"
   },
   "app": {
     "background": {
