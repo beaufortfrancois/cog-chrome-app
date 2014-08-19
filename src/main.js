@@ -70,12 +70,15 @@ function updateBattery(batteryManager) {
 }
 
 function initPlugins() {
-  var pluginList = document.querySelector('#plugin-list');
-  var plugins = navigator.plugins;
+  if (!navigator.plugins.length) {
+    return;
+  }
 
-  pluginList.innerHTML = (plugins.length) ? '' : '-';
-  for (var i = 0; i < plugins.length; i++) {
-    pluginList.innerHTML += '<div>' + plugins[i].name + '</div>';
+  document.querySelector('#plugins').classList.remove('hidden');
+
+  var pluginList = document.querySelector('#plugin-list');
+  for (var i = 0; i < navigator.plugins.length; i++) {
+    pluginList.innerHTML += '<div>' + navigator.plugins[i].name + '</div>';
   }
 }
 
