@@ -1,0 +1,93 @@
+{
+  "appName": {
+    "message": "Cog - System Info Viewer"
+  },
+  "appShortName": {
+    "message": "Cog"
+  },
+  "appDescription": {
+    "message": "Display lots of useful hardware and network info"
+  },
+  "operatingSystemLabel": {
+    "message": "Operating System"
+  },
+  "platformLabel": {
+    "message": "Platform"
+  },
+  "chromeVersionLabel": {
+    "message": "Chrome Version"
+  },
+  "cpuNameLabel": {
+    "message": "CPU"
+  },
+  "cpuArchLabel": {
+    "message": "Architecture"
+  },
+  "cpuFeaturesLabel": {
+    "message": "Features"
+  },
+  "cpuUsageLabel": {
+    "message": "CPU Usage"
+  },
+  "internalStorageUnitsLabel": {
+    "message": "Internal Storage"
+  },
+  "externalStorageUnitsLabel": {
+    "message": "External Storage"
+  },
+  "memoryCapacityLabel": {
+    "message": "Memory"
+  },
+  "memoryUsageLabel": {
+    "message": "Memory Usage"
+  },
+  "internetStateLabel": {
+    "message": "Internet"
+  },
+  "localAdaptersLabel": {
+    "message": "Network Info"
+  },
+  "onlineState": {
+    "message": "Online"
+  },
+  "offlineState": {
+    "message": "Offline"
+  },
+  "batteryStatusLabel": {
+    "message": "Battery"
+  },
+  "batteryTimeLabel": {
+    "message": "Time"
+  },
+  "batteryLevelLabel": {
+    "message": "Battery Level"
+  },
+  "batteryChargingState": {
+    "message": "Charging"
+  },
+  "batteryDischargingState": {
+    "message": "Discharging"
+  },
+  "untilFullText": {
+    "message": " until full"
+  },
+  "leftText": {
+    "message": " left"
+  },
+  "primaryDisplayLabel": {
+    "message": "Primary Display"
+  },
+  "otherDisplaysLabel": {
+    "message": "Other Displays"
+  },
+  "languageLabel": {
+    "message": "Primary Language"
+  },
+  "acceptLanguagesLabel": {
+    "message": "All Languages"
+  },
+  "pluginsListLabel": {
+    "message": "Plugins"
+  }
+}
+
