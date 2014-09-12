@@ -1,6 +1,44 @@
 var timeoutId;
 var previousCpuInfo;
 
+function initLabels() {
+
+  function setLabel(elementId, messageId) {
+    var label = document.querySelector('label[for=' + elementId + ']');
+    label.textContent = chrome.i18n.getMessage(messageId);
+  }
+
+  setLabel('operating-system', 'operatingSystemLabel');
+  setLabel('platform', 'platformLabel');
+  setLabel('chrome-version', 'chromeVersionLabel');
+
+  setLabel('cpu-name', 'cpuNameLabel');
+  setLabel('cpu-arch', 'cpuArchLabel');
+  setLabel('cpu-features', 'cpuFeaturesLabel');
+  setLabel('cpu-usage', 'cpuUsageLabel');
+
+  setLabel('internal-storage-units', 'internalStorageUnitsLabel');
+  setLabel('external-storage-units', 'externalStorageUnitsLabel');
+
+  setLabel('memory-capacity', 'memoryCapacityLabel');
+  setLabel('memory-usage', 'memoryUsageLabel');
+
+  setLabel('internet-state', 'internetStateLabel');
+  setLabel('local-adapters', 'localAdaptersLabel');
+
+  setLabel('battery-status', 'batteryStatusLabel');
+  setLabel('battery-time', 'batteryTimeLabel');
+  setLabel('battery-level', 'batteryLevelLabel');
+
+  setLabel('primary-display', 'primaryDisplayLabel');
+  setLabel('other-displays', 'otherDisplaysLabel');
+
+  setLabel('language', 'languageLabel');
+  setLabel('accept-languages', 'acceptLanguagesLabel');
+
+  setLabel('plugins-list', 'pluginsListLabel');
+}
+
 function initInfo() {
   var operatingSystem = document.querySelector('#operating-system');
   if (/CrOS/.test(navigator.userAgent)) {
@@ -20,8 +58,8 @@ function initInfo() {
   var chromeVersion = document.querySelector('#chrome-version');
   chromeVersion.textContent = navigator.userAgent.match('Chrome/([0-9]*\.[0-9]*\.[0-9]*\.[0-9]*)')[1];
 
-  var platformName = document.querySelector('#platform-name');
-  platformName.textContent = navigator.platform.replace(/_/g, '-');
+  var platform = document.querySelector('#platform');
+  platform.textContent = navigator.platform.replace(/_/g, '-');
 
   var language = document.querySelector('#language');
   language.textContent = navigator.language;
@@ -53,15 +91,21 @@ function initBattery() {
 
 function updateBattery(batteryManager) {
     var batteryStatus = document.querySelector('#battery-status');
-    batteryStatus.textContent = batteryManager.charging ? 'Charging' : 'Discharging';
+    if (batteryManager.charging) {
+      batteryStatus.textContent = chrome.i18n.getMessage('batteryChargingState');
+    } else {
+      batteryStatus.textContent = chrome.i18n.getMessage('batteryDischargingState');
+    }
 
     var batteryTime = document.querySelector('#battery-time');
     if (batteryManager.charging) {
       batteryTime.textContent = (batteryManager.chargingTime !== Infinity) ?
-          formatSeconds(batteryManager.chargingTime) + ' until full' : '-';
+          formatSeconds(batteryManager.chargingTime) +
+          chrome.i18n.getMessage('untilFullText') : '-';
     } else {
       batteryTime.textContent = (batteryManager.dischargingTime !== Infinity) ?
-          formatSeconds(batteryManager.dischargingTime) + ' left' : '-';
+          formatSeconds(batteryManager.dischargingTime) +
+          chrome.i18n.getMessage('leftText') : '-';
     }
 
     var batteryLevel = document.querySelector('#battery-level');
@@ -76,7 +120,7 @@ function initPlugins() {
 
   document.querySelector('#plugins').classList.remove('hidden');
 
-  var pluginList = document.querySelector('#plugin-list');
+  var pluginList = document.querySelector('#plugins-list');
   for (var i = 0; i < navigator.plugins.length; i++) {
     pluginList.innerHTML += '<div>' + navigator.plugins[i].name + '</div>';
   }
@@ -91,31 +135,31 @@ function updateStorage() {
 
     document.querySelector('#storage').classList.remove('hidden');
 
-    var fixedStorageUnits = document.querySelector('#fixed-storage-units');
-    var removableStorageUnits = document.querySelector('#removable-storage-units');
-    fixedStorageUnits.innerHTML = '';
-    removableStorageUnits.innerHTML = '';
+    var internalStorageUnits = document.querySelector('#internal-storage-units');
+    var externalStorageUnits = document.querySelector('#external-storage-units');
+    internalStorageUnits.innerHTML = '';
+    externalStorageUnits.innerHTML = '';
     for (var i = 0; i < storageInfo.length; i++) {
       var storageUnitHtml = '<div>' + storageInfo[i].name +
           (storageInfo[i].capacity ? ' - ' + formatBytes(storageInfo[i].capacity) : '') + '</div>';
       if (storageInfo[i].type === 'removable') {
-        removableStorageUnits.innerHTML += storageUnitHtml;
+        externalStorageUnits.innerHTML += storageUnitHtml;
       } else {
-        fixedStorageUnits.innerHTML += storageUnitHtml;
+        internalStorageUnits.innerHTML += storageUnitHtml;
       }
     }
 
-    var fixedStorage = document.querySelector('#fixed-storage');
-    if (fixedStorageUnits.textContent === '') {
-      fixedStorage.classList.add('hidden');
+    var internalStorage = document.querySelector('#internal-storage');
+    if (internalStorageUnits.textContent === '') {
+      internalStorage.classList.add('hidden');
     } else {
-      fixedStorage.classList.remove('hidden');
+      internalStorage.classList.remove('hidden');
     }
-    var removableStorage = document.querySelector('#removable-storage');
-    if (removableStorageUnits.textContent === '') {
-      removableStorage.classList.add('hidden');
+    var externalStorage = document.querySelector('#external-storage');
+    if (externalStorageUnits.textContent === '') {
+      externalStorage.classList.add('hidden');
     } else {
-      removableStorage.classList.remove('hidden');
+      externalStorage.classList.remove('hidden');
     }
   });
 }
@@ -194,7 +238,11 @@ function updateNetwork() {
   chrome.system.network.getNetworkInterfaces(function(networkInterfaces) {
 
     var internetState = document.querySelector('#internet-state');
-    internetState.textContent = (navigator.onLine) ? 'Online' : 'Offline';
+    if (navigator.onLine) {
+      internetState.textContent = chrome.i18n.getMessage('onlineState');
+    } else {
+      internetState.textContent = chrome.i18n.getMessage('offlineState');
+    }
     if (navigator.connection && navigator.connection.type !== 'none') {
       internetState.textContent += ' - ' + navigator.connection.type;
     }
@@ -260,6 +308,8 @@ chrome.runtime.onSuspendCanceled.addListener(function() {
 document.addEventListener('DOMContentLoaded', function() {
   var topBar = document.querySelector('.topbar');
   topBar.innerHTML += ' ' + chrome.runtime.getManifest().version;
+
+  initLabels();
 
   initInfo();
   initBattery();

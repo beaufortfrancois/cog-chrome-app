@@ -70,7 +70,7 @@ body {
 
 }
 
-.label {
+label {
   margin-top: 8px;
   font-size: 80%;
   color: rgba(192, 233, 195, .8);
