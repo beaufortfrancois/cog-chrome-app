@@ -133,15 +133,14 @@ function initCpu() {
     document.querySelector('#cpu-features').textContent = cpuFeatures;
 
     var cpuUsage = document.querySelector('#cpu-usage');
+    var width = parseInt(window.getComputedStyle(cpuUsage).width.replace(/px/g, ''));
     for (var i = 0; i < cpuInfo.numOfProcessors; i++) {
       var bar = document.createElement('div');
       bar.classList.add('bar');
-      var userSection = document.createElement('span');
-      userSection.classList.add('bar-section', 'user');
-      var kernelSection = document.createElement('span');
-      kernelSection.classList.add('bar-section', 'kernel');
-      bar.appendChild(userSection);
-      bar.appendChild(kernelSection);
+      var usedSection = document.createElement('span');
+      usedSection.classList.add('bar-section', 'used');
+      usedSection.style.transform = 'translate(-' + width + 'px, 0px)';
+      bar.appendChild(usedSection);
       cpuUsage.appendChild(bar);
     }
   });
@@ -151,19 +150,17 @@ function updateCpuUsage() {
   chrome.system.cpu.getInfo(function(cpuInfo) {
 
     var cpuUsage = document.querySelector('#cpu-usage');
+    var width = parseInt(window.getComputedStyle(cpuUsage).width.replace(/px/g, ''));
     for (var i = 0; i < cpuInfo.numOfProcessors; i++) {
       var usage = cpuInfo.processors[i].usage;
       if (previousCpuInfo) {
         var oldUsage = previousCpuInfo.processors[i].usage;
-        var userSectionWidth = Math.floor((oldUsage.user - usage.user) / (oldUsage.total - usage.total) * 100);
-        var kernelSectionWidth = Math.floor((oldUsage.kernel - usage.kernel) / (oldUsage.total - usage.total) * 100);
+        var usedSectionWidth = Math.floor((oldUsage.kernel + oldUsage.user - usage.kernel - usage.user) / (oldUsage.total - usage.total) * 100);
       } else {
-        var userSectionWidth = Math.floor(usage.user / usage.total * 100);
-        var kernelSectionWidth = Math.floor(usage.kernel / usage.total * 100);
+        var usedSectionWidth = Math.floor((usage.kernel + usage.kernel) / usage.total * 100);
       }
       var bar = cpuUsage.querySelector('.bar:nth-child(' + (i + 1) + ')');
-      bar.querySelector('.user').style.width = userSectionWidth + '%';
-      bar.querySelector('.kernel').style.width = kernelSectionWidth + '%';
+      bar.querySelector('.used').style.transform = 'translate(' + parseInt(usedSectionWidth * width / 100 - width) + 'px, 0px)';
     }
     previousCpuInfo = cpuInfo;
   });
