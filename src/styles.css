@@ -5,11 +5,21 @@
   src: local('Roboto Condensed Regular'), local('RobotoCondensed-Regular'), url(assets/RobotoCondensed.woff) format('woff');
 }
 
+::-webkit-scrollbar {
+  width: 0px !important;
+}
+
+html {
+  height: 100%;
+}
+
 body {
   background: linear-gradient(180deg, #11575c 0%,#3b8766 100%) no-repeat #3b8766;
   margin: 0px auto;
   font-size: 20px;
   font-family: 'Roboto Condensed';
+  overflow-y: scroll;
+  height: 100%;
 }
 
 .topbar {
