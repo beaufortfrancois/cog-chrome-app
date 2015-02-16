@@ -196,12 +196,13 @@ function updateCpuUsage() {
     var cpuUsage = document.querySelector('#cpu-usage');
     var width = parseInt(window.getComputedStyle(cpuUsage).width.replace(/px/g, ''));
     for (var i = 0; i < cpuInfo.numOfProcessors; i++) {
-      var usage = cpuInfo.processors[i].usage;
+        var usage = cpuInfo.processors[i].usage;
+        var usedSectionWidth = 0;
       if (previousCpuInfo) {
         var oldUsage = previousCpuInfo.processors[i].usage;
-        var usedSectionWidth = Math.floor((oldUsage.kernel + oldUsage.user - usage.kernel - usage.user) / (oldUsage.total - usage.total) * 100);
+        usedSectionWidth = Math.floor((usage.kernel + usage.user - oldUsage.kernel - oldUsage.user) / (usage.total - oldUsage.total) * 100);
       } else {
-        var usedSectionWidth = Math.floor((usage.kernel + usage.kernel) / usage.total * 100);
+        usedSectionWidth = Math.floor((usage.kernel + usage.user) / usage.total * 100);
       }
       var bar = cpuUsage.querySelector('.bar:nth-child(' + (i + 1) + ')');
       bar.querySelector('.used').style.transform = 'translate(' + parseInt(usedSectionWidth * width / 100 - width) + 'px, 0px)';
