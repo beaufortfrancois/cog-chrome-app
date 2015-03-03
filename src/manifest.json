@@ -3,7 +3,8 @@
   "name": "Cog - System Info Viewer",
   "short_name": "Cog",
   "description": "__MSG_appDescription__",
-  "version": "0.0.13",
+  "version": "0.0.12.1",
+  "version_name": "0.0.12",
   "default_locale": "en",
   "icons": {
     "16": "assets/icon_16.png",

@@ -308,7 +308,7 @@ chrome.runtime.onSuspendCanceled.addListener(function() {
 
 document.addEventListener('DOMContentLoaded', function() {
   var topBar = document.querySelector('.topbar');
-  topBar.innerHTML += ' ' + chrome.runtime.getManifest().version;
+  topBar.innerHTML += ' ' + chrome.runtime.getManifest().version_name;
 
   initLabels();
 
