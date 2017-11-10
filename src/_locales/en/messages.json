@@ -26,6 +26,9 @@
   "cpuFeaturesLabel": {
     "message": "Features"
   },
+  "cpuTemperaturesLabel": {
+    "message": "Temperatures"
+  },
   "cpuUsageLabel": {
     "message": "CPU Usage"
   },

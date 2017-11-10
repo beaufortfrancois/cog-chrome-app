@@ -16,6 +16,7 @@ function initLabels() {
   setLabel('cpu-arch', 'cpuArchLabel');
   setLabel('cpu-features', 'cpuFeaturesLabel');
   setLabel('cpu-usage', 'cpuUsageLabel');
+  setLabel('cpu-temperatures', 'cpuTemperaturesLabel');
 
   setLabel('internal-storage-units', 'internalStorageUnitsLabel');
   setLabel('external-storage-units', 'externalStorageUnitsLabel');
@@ -176,6 +177,12 @@ function initCpu() {
     var cpuFeatures = cpuInfo.features.join(', ').toUpperCase().replace(/_/g, '.') || '-';
     document.querySelector('#cpu-features').textContent = cpuFeatures;
 
+    document.querySelector('#cpu-temperatures').textContent = 'N/A';
+    if ('temperatures' in cpuInfo) {
+      var cpuTemperatures = cpuInfo.temperatures.map(t => t + ' °C').join('<br/>');
+      document.querySelector('#cpu-temperatures').innerHTML = cpuTemperatures;
+    }
+
     var cpuUsage = document.querySelector('#cpu-usage');
     var width = parseInt(window.getComputedStyle(cpuUsage).width.replace(/px/g, ''));
     for (var i = 0; i < cpuInfo.numOfProcessors; i++) {
@@ -192,6 +199,11 @@ function initCpu() {
 
 function updateCpuUsage() {
   chrome.system.cpu.getInfo(function(cpuInfo) {
+
+    if ('temperatures' in cpuInfo) {
+      var cpuTemperatures = cpuInfo.temperatures.map(t => t + ' °C').join('<br/>');
+      document.querySelector('#cpu-temperatures').innerHTML = cpuTemperatures;
+    }
 
     var cpuUsage = document.querySelector('#cpu-usage');
     var width = parseInt(window.getComputedStyle(cpuUsage).width.replace(/px/g, ''));
