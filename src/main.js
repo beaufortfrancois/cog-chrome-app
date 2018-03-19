@@ -286,9 +286,10 @@ function updateDisplays() {
     otherDisplays.innerHTML = '';
     for (var i = 0; i < displayInfo.length; i++) {
       var name = (displayInfo[i].name) ? displayInfo[i].name + ' - ' : '';
-      var dpi = (displayInfo[i].dpiX) ? ' @ ' + displayInfo[i].dpiX + 'dpi' : '';
+      var refreshRate = (displayInfo[i].refreshRate) ? ' (' + displayInfo[i].refreshRate + ')' : '';
+      var dpi = (displayInfo[i].dpiX) ? ' - ' + parseInt(displayInfo[i].dpiX, 10) + 'dpi' : '';
       var display = '<div>' + name + displayInfo[i].bounds.width + 'x' +
-                    displayInfo[i].bounds.height + dpi + '</div>';
+                    displayInfo[i].bounds.height + refreshRate + dpi + '</div>';
       if (displayInfo[i].isPrimary) {
         primaryDisplay.innerHTML += display;
       } else {
