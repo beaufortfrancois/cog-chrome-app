@@ -179,8 +179,13 @@ function initCpu() {
 
     document.querySelector('#cpu-temperatures').textContent = 'N/A';
     if ('temperatures' in cpuInfo) {
-      var cpuTemperatures = cpuInfo.temperatures.map(t => t + ' °C').join('<br/>');
-      document.querySelector('#cpu-temperatures').innerHTML = cpuTemperatures;
+      updateCpuTemperatures(cpuInfo);
+      document.querySelector('#cpu-temperatures').addEventListener('click', function(event) {
+        chrome.storage.sync.get('cpuTemperatureScale', function(result) {
+          var cpuTemperatureScale = result.cpuTemperatureScale || 'Celsius';
+          chrome.storage.sync.set({cpuTemperatureScale: (cpuTemperatureScale === 'Fahrenheit') ? 'Celsius' : 'Fahrenheit'});
+        });
+      });
     }
 
     var cpuUsage = document.querySelector('#cpu-usage');
@@ -201,8 +206,7 @@ function updateCpuUsage() {
   chrome.system.cpu.getInfo(function(cpuInfo) {
 
     if ('temperatures' in cpuInfo) {
-      var cpuTemperatures = cpuInfo.temperatures.map(t => t + ' °C').join('<br/>');
-      document.querySelector('#cpu-temperatures').innerHTML = cpuTemperatures;
+      updateCpuTemperatures(cpuInfo);
     }
 
     var cpuUsage = document.querySelector('#cpu-usage');
@@ -220,6 +224,16 @@ function updateCpuUsage() {
       bar.querySelector('.used').style.transform = 'translate(' + parseInt(usedSectionWidth * width / 100 - width) + 'px, 0px)';
     }
     previousCpuInfo = cpuInfo;
+  });
+}
+
+function updateCpuTemperatures(cpuInfo) {
+  chrome.storage.sync.get('cpuTemperatureScale', function(result) {
+    if (result.cpuTemperatureScale === 'Fahrenheit') {
+      document.querySelector('#cpu-temperatures').innerHTML = cpuInfo.temperatures.map(t => t + ' °C').join('<br/>');
+    } else {
+      document.querySelector('#cpu-temperatures').innerHTML = cpuInfo.temperatures.map(t => Math.round(t * 1.8 + 32) + ' °F').join('<br/>');
+    }
   });
 }
 

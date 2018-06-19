@@ -21,6 +21,7 @@
     }
   },
   "permissions": [
+    "storage",
     "system.cpu",
     "system.display",
     "system.memory",
